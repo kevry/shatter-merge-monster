@@ -1,0 +1,22 @@
+ROOT_ID_2_USE: 720575941469262301 # root id to start off with. Make sure its the latest root id
+SUB_DIRECTORY: '720575941352166960' # subdir to save logs and split data
+
+CAVECLIENT_DATASTACK: 'brain_and_nerve_cord' # name of datastack for using caveclient
+
+PREVIEW: False # set to False when ready to do splits
+
+MAX_PATHS: 4000
+NUM_EDGES: 1
+
+NUM_EDGES_PARTNER: 2
+MAX_PATH_PARTNER: 4000
+
+L2_NODE_MAX_DIST: 30000
+WAIT_SEC: 80
+ROUNDS: 10
+
+MAX_PATHS_PATHCUT: 15
+NUM_EDGES_PATHCUT: 1
+
+MONSTER_THRESH: 5000 # number of l2 nodes to consider segment a merge monster
+LOUVAIN_RESOLUTION: 20 # louvain alogrithm parameter
