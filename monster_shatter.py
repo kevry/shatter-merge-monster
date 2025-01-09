@@ -44,7 +44,7 @@ if __name__ == "__main__":
     print("---- Shattering merge monsters ----")
     print(f'Starting off with root id: {root_id}\n')
 
-    for _ in range(config["ROUNDS"]):
+    for ri in range(config["ROUNDS"]):
         # check if initial root id is the latest
         root_id, is_latest = check_latest_root_id(client, latest_root_id = root_id, verbose=True, replace_root_id=False)
         if not is_latest:
@@ -181,8 +181,13 @@ if __name__ == "__main__":
         
         print(f"SWITCHING root id from {root_id} -> {monster_root_id}\n")
         root_id = monster_root_id
-        print('waiting ...')
-        time.sleep(config["WAIT_SEC"])
+
+        if ri == config["ROUNDS"]-1:
+            print('done.')
+            print(f'- left off with ~< {len(l2stats)} l2 nodes')
+        else:
+            print('waiting ...')
+            time.sleep(config["WAIT_SEC"])
         
 
     # log_file.close()
