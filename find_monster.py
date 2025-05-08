@@ -2,43 +2,66 @@ from caveclient import CAVEclient
 
 """ Use this script to find the latest root ids for POTENTIAL merge monsters """
 
-# initilaize caveclient
-client = CAVEclient(datastack_name='brain_and_nerve_cord')
+""" 
+Identifying MONSTER merge errors relies on the L2 cache https://caveclient.readthedocs.io/en/latest/guide/l2cache.html
+- Segments that have more than a specified number of l2 nodes, are considered MONSTER merge errors 
+- Chunked graph doc: https://caveclient.readthedocs.io/en/latest/guide/chunkedgraph.html
+    
+"""
 
-def find_monster(client, root_id, monster_thresh=5000):
+################# Parameters (CHANGE OF NEEDED) #######################
+client = CAVEclient(datastack_name='brain_and_nerve_cord') # Initilaize caveclient
+MONSTER_THRESH = 500 # Threshold for number of l2 nodes to consider segment a merge monster
+####################################################
+
+def find_monster(root_id, client, MONSTER_THRESH):
     """ find merge monster using an initial root id """
     found_monster = False
-    original_root_id = root_id
-    
+    # original_root_id = root_id
+
     while not found_monster:
         potential_latest_root_id = client.chunkedgraph.get_latest_roots(root_id)
-        if len(potential_latest_root_id) == 1: 
-            if potential_latest_root_id[0] == root_id:
-                n_l2_nodes = len(client.chunkedgraph.get_leaves(root_id, stop_layer=2))
-                print(f"- {root_id} is the latest merge monster with {n_l2_nodes} nodes.")
+
+
+        if len(potential_latest_root_id) == 1: # only 1 parent root id found
+
+            potential_root_id = potential_latest_root_id[0]
+            num_l2_nodes = len(client.chunkedgraph.get_leaves(potential_root_id, stop_layer=2)) # get number of l2 nodes
+
+            if potential_root_id == root_id: # if it matches, current root id, you found the latest
+                print(f"- {root_id} is the latest merge monster with {num_l2_nodes} L2 nodes.")
             else:
-                n_l2_nodes = len(client.chunkedgraph.get_leaves(root_id, stop_layer=2))
-                print(f"- {root_id} changed to {potential_latest_root_id[0]} with {n_l2_nodes} nodes.")
+                print(f"- {root_id} changed to {potential_root_id} with {num_l2_nodes} L2 nodes.")
                 root_id = potential_latest_root_id[0]
+
+            # found monster
             found_monster = True
+
         else:
-            for pid in potential_latest_root_id:
-                n_l2_nodes = len(client.chunkedgraph.get_leaves(pid, stop_layer=2))
-                if n_l2_nodes > monster_thresh:
-                    print(f"- {root_id} -> {pid}. New potential monster with {n_l2_nodes} nodes.")
-                    root_id = pid
+
+            found_potential_monster = False
+            # multiple potential root ids
+            for potential_root_id in potential_latest_root_id:
+                num_l2_nodes = len(client.chunkedgraph.get_leaves(potential_root_id, stop_layer=2))
+                if num_l2_nodes > MONSTER_THRESH: # if one of parent ids is over the threshold, update root id
+                    print(f"- {root_id} -> {potential_root_id}. New potential monster with {num_l2_nodes} nodes.")
+                    root_id = potential_root_id
+                    found_potential_monster = True
                     break
+            if not found_potential_monster:
+                print("- Error trying to find the latest merge monster segment!")
+                return
     print('\n')
     return root_id
 
 
 if __name__ == "__main__":
-    # root_id = 720575941352166960
 
-    # list of root ids to test
-    root_ids = [720575941352166960, 720575941403906416, 720575941525844580, 720575941534703809, 
-                720575941573984777, 720575941593317669, 720575941595424133, 720575941617092053, 720575941654695892]
+    # list of root ids that "might" be a merge monster
+    root_ids = [720575941412579183, 720575941486633734, 720575941514714691, 720575941515762019, 720575941519604440, 720575941521153715, 720575941557564068, 720575941590881790, 
+                720575941595448433, 720575941611064138, 720575941615249049, 720575941645342369, 720575941658100248]
     
+    # loop through all to identify latest root id for these potential merge monsters
     for root_id in root_ids:
         print(f"Finding the new monster root id for {root_id}")
-        find_monster(client, root_id, monster_thresh=2000)
+        _ = find_monster(root_id, client, MONSTER_THRESH=500)
