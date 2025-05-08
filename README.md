@@ -1,8 +1,14 @@
 # Programatically shatter merge monsters
+
 ## How to run
 
 ### Config file
 Update the config.yaml to the root id you want to programatically split. Modify any parameters if needed.
+
+`cd shatter-merge-monster`
+
+### Install libs
+`pip install -r requirements.txt`
 
 
 ### Run script
