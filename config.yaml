@@ -1,22 +1,38 @@
-ROOT_ID_2_USE: 720575941469262301 # root id to start off with. Make sure its the latest root id
-SUB_DIRECTORY: '720575941352166960' # subdir to save logs and split data
+# MAIN root id to start from # root id to start off with. Make sure its the latest root id
+ROOT_ID_2_USE: 720575941590881790
 
-CAVECLIENT_DATASTACK: 'brain_and_nerve_cord' # name of datastack for using caveclient
+# name of subdir to save logs and split data. after starting from main root id, you can keep this the same. for tracking
+SUB_DIRECTORY: '720575941590881790' 
 
+# name of datastack for using caveclient
+CAVECLIENT_DATASTACK: 'brain_and_nerve_cord' 
+
+# For debugging
 PREVIEW: False # set to False when ready to do splits
 
+# merge clusters that only have ...
 MAX_PATHS: 4000
 NUM_EDGES: 1
 
-NUM_EDGES_PARTNER: 2
+# merge WITH clusters that have
 MAX_PATH_PARTNER: 4000
+NUM_EDGES_PARTNER: 2
 
 L2_NODE_MAX_DIST: 30000
+
+# After spliting, regenerating the l2 cache takes some time. Set a wait time (in seconds). Increase if longer wait time is needed
 WAIT_SEC: 80
+
+# How many rounds of successful splits to do. Entire process is semi-automated
 ROUNDS: 10
 
-MAX_PATHS_PATHCUT: 15
+# Gather clusters to cutout
+MAX_PATHS_PATHCUT: 20
 NUM_EDGES_PATHCUT: 1
 
-MONSTER_THRESH: 5000 # number of l2 nodes to consider segment a merge monster
-LOUVAIN_RESOLUTION: 20 # louvain alogrithm parameter
+# number of l2 nodes to consider segment a merge monster
+MONSTER_THRESH: 1000 
+
+
+#louvain alogrithm parameter
+LOUVAIN_RESOLUTION: 50  
