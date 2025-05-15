@@ -43,8 +43,7 @@ if __name__ == "__main__":
     print("---- Shattering merge monsters ----")
     print(f'Starting off with root id: {root_id}\n')
 
-
-    while True: # inifite loop. cautious
+    while True: # inifite loop. BE CAUTIOUS
 
         print(f"Cutting clusters with {config["NUM_EDGES_PATHCUT"]} number of edge paths ...\n")
         for ri in range(config["ROUNDS"]):
@@ -217,5 +216,3 @@ if __name__ == "__main__":
                 print('waiting ...')
                 time.sleep(config["WAIT_SEC"])
             
-
-        # log_file.close()
